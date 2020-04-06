@@ -66,49 +66,52 @@ Oracle Cloud Infrastructure Registry is an Oracle-managed registry that enables 
 
 <img src="https://raw.githubusercontent.com/oracle/learning-library/master/oci-library/qloudable/Grafana/img/Grafana_015.PNG" alt="image-alt-text">
 
-2. From the OCI Services menu,Click **Virtual Cloud Network** under Networking and Click **Create Virtual Cloud Network**
-
-3. Select the compartment assigned to you from drop down menu on left part of the screen
-
-**NOTE:** Ensure the correct Compartment is selected under COMPARTMENT list
+2. From the OCI Services menu,Click **Virtual Cloud Network**. Select the compartment assigned to you from drop down menu on left part of the screen under Networking and Click **Networking QuickStart**
 
 <img src="https://raw.githubusercontent.com/oracle/learning-library/master/oci-library/qloudable/OCI_Quick_Start/img/RESERVEDIP_HOL001.PNG" alt="image-alt-text">
 
-<img src="https://raw.githubusercontent.com/oracle/learning-library/master/oci-library/qloudable/OCI_Quick_Start/img/RESERVEDIP_HOL002.PNG" alt="image-alt-text">
+**NOTE:** Ensure the correct Compartment is selected under COMPARTMENT list
+
+3. Click **VCN with Internet Connectivity** and click **Start Workflow**
 
 4. Fill out the dialog box:
 
 
-- **Create in Compartment:** Has the correct compartment
-- **Name:** Enter easy to re¬member name
-- **Create Virtual Cloud Network Plus Related Resources:** Select this option.
-- Click **Create Virtual Cloud Network**
-- Click **Close**
+- **VCN NAME**: Provide a name
+- **COMPARTMENT**: Ensure your compartment is selected
+- **VCN CIDR BLOCK**: Provide a CIDR block (10.0.0.0/16)
+- **PUBLIC SUBNET CIDR BLOCK**: Provide a CIDR block (10.0.1.0/24)
+- **PRIVATE SUBNET CIDR BLOCK**: Provide a CIDR block (10.0.2.0/24)
+- Click **Next**
 
-<img src="https://raw.githubusercontent.com/oracle/learning-library/master/oci-library/qloudable/OCI_Quick_Start/img/RESERVEDIP_HOL003.PNG" alt="image-alt-text">
+5. Verify all the information and  Click **Create**
 
-<img src="https://raw.githubusercontent.com/oracle/learning-library/master/oci-library/qloudable/OCI_Quick_Start/img/RESERVEDIP_HOL004.PNG" alt="image-alt-text">
-            
+6. This will create a VCN with followig components.
+
+**VCN**, **Public subnet**, **Private subnet**, **Internet gateway (IG)**, **NAT gateway (NAT)**, **Service gateway (SG)**
+
+7. Click **View Virtual Cloud Network** to display your VCN details.
+             
 
 ***We will now create an Auth Token. This token will be used to login to connect to OCI Docker registry from the Docker computeinstance that will be created later one***
 
-5. In OCI console Click the user icon (top right)  then **User settings**. Under Resrouces Click **Auth Token**, then **Generate Token**. In pop up window provide a description then Click **Generate Token**
+8. In OCI console Click the user icon (top right)  then **User settings**. Under Resrouces Click **Auth Token**, then **Generate Token**. In pop up window provide a description then Click **Generate Token**
 
 <img src="https://raw.githubusercontent.com/oracle/learning-library/master/oci-library/qloudable/Autonomous_Data_Warehouse/img/ADW_005.PNG" alt="image-alt-text">
 
 <img src="https://raw.githubusercontent.com/oracle/learning-library/master/oci-library/qloudable/Autonomous_Data_Warehouse/img/ADW_006.PNG" alt="image-alt-text">
 
-6.  Click **Copy** and save the token in Notepad.**Do not close the window without saving the token as it can not be retrieved later**
+9.  Click **Copy** and save the token in Notepad.**Do not close the window without saving the token as it can not be retrieved later**
 
 <img src="https://raw.githubusercontent.com/oracle/learning-library/master/oci-library/qloudable/Autonomous_Data_Warehouse/img/ADW_007.PNG" alt="image-alt-text">
 
-7. From OCI Services menu, Click **Registry(OCIR)** under **Developer Services**
+10. From OCI Services menu, Click **Registry(OCIR)** under **Developer Services**
 
 <img src="https://raw.githubusercontent.com/oracle/learning-library/master/oci-library/qloudable/Container_Registry/img/OCIR_HOL0033.PNG" alt="image-alt-text">
  
-8. Click **Create Repository**. Provide Repository name (all Lowercase), Check **Public** for **Acess**, Click **Submit**
+11. Click **Create Repository**. Provide Repository name (all Lowercase), Check **Public** for **Acess**, Click **Submit**
 
-9.  Once created, verify there are no existing images in the repository (as shown in OCI console)
+12.  Once created, verify there are no existing images in the repository (as shown in OCI console)
 
 <img src="https://raw.githubusercontent.com/oracle/learning-library/master/oci-library/qloudable/Container_Registry/img/OCIR_HOL0034.PNG" alt="image-alt-text">
 
@@ -172,15 +175,18 @@ cat /C/Users/PhotonUser/.ssh/id_rsa.pub
 - **Choose an operating system or image source**: For the image, we recommend using the Latest Oracle Linux available.
 - **Availability Domain**: Select availability domain
 - **Instance Type**: Select Virtual Machine 
-- **Instance Shape**: Select VM shape (Choose from VM.Standard2.1, VM.Standard.E2.1, VM.Standard1.1, VM.Standard.B1.1)
+- **Instance Shape**: Select VM shape 
 
 **Under Configure Networking**
 - **Virtual cloud network compartment**: Select your compartment
 - **Virtual cloud network**: Choose the VCN 
 - **Subnet Compartment:** Choose your compartment. 
-- **Subnet:** Choose the first Subnet
+- **Subnet:** Choose the Public Subnet under **Public Subnets** 
 - **Use network security groups to control traffic** : Leave un-checked
 - **Assign a public IP address**: Check this option
+
+<img src="https://raw.githubusercontent.com/oracle/learning-library/master/oci-library/qloudable/OCI_Quick_Start/img/RESERVEDIP_HOL0011.PNG" alt="image-alt-text">
+
 - **Boot Volume:** Leave the default
 - **Add SSH Keys:** Choose 'Paste SSH Keys' and paste the Public Key saved earlier.
 
@@ -199,7 +205,7 @@ cat /C/Users/PhotonUser/.ssh/id_rsa.pub
 11. Enter **ls** and verify id_rsa file exists
 
 12. Enter command 
-```
+```bash
 ssh -i id_rsa opc@<PUBLIC_IP_OF_COMPUTE>
 ```
 
@@ -267,7 +273,7 @@ and verify alpine is present
 
 22. Now we will push this image to Docker registry created in OCI. First login to Registry in OCI. Enter command:
 
-```
+```bash
 docker login <Region_Name_Code>.ocir.io
 ```
 
@@ -292,7 +298,7 @@ docker images
 ``` 
 and note down the image id of alpine. Enter command: (No Spaces)
 
-```
+```bash
 docker tag <image_id>  <Region_Name_Code>.ocir.io/<TenancyName>/<docker_registry_name>:<image_name> 
 ```
 
@@ -316,7 +322,7 @@ and verify version<x.y>.test is present.
 
 27. We will now push the image to docker registry in OCI. Enter command: 
 
-```
+```bash
 docker push <Region_Name_Code>.ocir.io/<Tenancy_Name>/<docker_registry_name>:<image_name>* (No Spaces)
 ```
 **NOTE:** In below example:
@@ -334,7 +340,7 @@ docker push <Region_Name_Code>.ocir.io/<Tenancy_Name>/<docker_registry_name>:<im
 **HINT:** Refresh the browser window if image is not displayed
 
 29. Switch to compute instance ssh window. Enter command:
-```
+```bash
 docker pull <Region_Name_Code>.ocir.io/<Tenancy_Name>/<docker_registry_name>:<image_name>*  (No Spaces)    
 ```
 30. Verify the pull command was successful
